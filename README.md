@@ -161,3 +161,9 @@ Executing booted program at 0x40000000
 If the binary prints an exception message or hangs before the banner, first
 check that the application was built against the generated headers for the same
 CPU as the bitstream and BIOS.
+
+## Contact
+
+E-mail: Gwenhael Goavec-Merou <gwenhael.goavec-merou@trabucayre.com></br>
+Copyright (C) <b>2025</b></br>
+SPDX-License-Identifier: BSD-2-Clause</br>
