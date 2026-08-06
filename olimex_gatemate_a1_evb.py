@@ -10,10 +10,14 @@ from migen import *
 
 from litex.gen import *
 
+from litex.build.generic_platform import Pins
+
 from litex_boards.platforms import olimex_gatemate_a1_evb
 
 
 from litex.soc.cores.clock.colognechip import GateMatePLL
+from litex.soc.cores.pwm               import PWM
+
 from litex.soc.integration.soc import *
 from litex.soc.integration.builder import *
 
@@ -64,6 +68,7 @@ class BaseSoC(SoCCore):
         eth_ip              = "192.168.1.50",
         remote_ip           = None,
         eth_dynamic_ip      = False,
+        with_pwm            = False,
         with_led_chaser     = True,
         **kwargs):
         platform = olimex_gatemate_a1_evb.Platform(toolchain)
@@ -117,6 +122,14 @@ class BaseSoC(SoCCore):
         if with_ethernet:
             self.add_ethernet(phy=self.ethphy, dynamic_ip=eth_dynamic_ip, local_ip=eth_ip, remote_ip=remote_ip, software_debug=False)
 
+        # PWM --------------------------------------------------------------------------------------
+        if with_pwm:
+            platform.add_extension([
+                ("pwm", 0, Pins("bank_misc1:4")),
+            ])
+            pwm_pads = platform.request("pwm")
+            self.pwm = PWM(pwm_pads)
+
 # Build --------------------------------------------------------------------------------------------
 
 def main():
@@ -134,6 +147,9 @@ def main():
     parser.add_target_argument("--eth-dynamic-ip", action="store_true",     help="Enable dynamic Ethernet IP assignment.")
     parser.add_target_argument("--remote-ip",      default="192.168.1.100", help="Remote IP address of TFTP server.")
 
+    # Peripherals.
+    parser.add_target_argument("--with-pwm",            action="store_true",      help="Enable PWM support.")
+
     args = parser.parse_args()
 
     args.integrated_main_ram_size = 16 * 1024 # 16k
@@ -147,6 +163,7 @@ def main():
         eth_ip              = args.eth_ip,
         eth_dynamic_ip      = args.eth_dynamic_ip,
         remote_ip           = args.remote_ip,
+        with_pwm            = args.with_pwm,
         **parser.soc_argdict)
 
     soc.platform.add_extension(olimex_gatemate_a1_evb._pmods_io)

@@ -7,8 +7,12 @@ RISC-V SoCs targeting the Olimex GateMate A1 EVB.
 > The current demo setup uses a GateMate board, but the FreeRTOS/LiteX software
 > parts can be adapted to any board supported by LiteX.
 
-`demo_blinky/` is a FreeRTOS application that has currently been
-tested with *NEORV32* and *VexRiscv* LiteX CPU variants.
+`demo_blink/` is a FreeRTOS application that has currently been tested with
+*NEORV32* and *VexRiscv* LiteX CPU variants.
+
+`demo_pwm/` is an interactive FreeRTOS application that accepts commands on
+the LiteX UART console, including PWM control commands when the SoC is built
+with PWM support.
 
 `olimex_gatemate_a1_evb.py` is a copy of the
 [litex-boards target](https://github.com/litex-hub/litex-boards/blob/master/litex_boards/targets/olimex_gatemate_a1_evb.py)
@@ -77,7 +81,7 @@ timer path and fail to boot.
 ### Gateware
 
 ```bash
-./olimex_gatemate_a1_evb.py --build [--load] [--cpu-type xxxx]
+./olimex_gatemate_a1_evb.py --build [--load] [--cpu-type xxxx] [--with-pwm]
 ```
 
 The `--load` option may be used at the same time or in a second step.
@@ -85,19 +89,32 @@ The `--load` option may be used at the same time or in a second step.
 - `vexriscv` (default)
 - `neorv32`
 
+The argument `--with-pwm` enables PWM peripheral (this option is required for
+`demo_pwm`.
+
 The gateware must be in place before compiling the demo.
+
+>NOTE:</br>
+> The PWM output is connected to misc bank1 Pins 4
 
 ### Software
 
-Build the NEORV32 demo with the generated NEORV32 LiteX software tree:
+Build the blink demo with the generated LiteX software tree:
 
 ```sh
 cd demo_blink
 make clean all
 ```
 
-After the build completes, `demo.bin` is created in `demo_blink/`.
-This file is used by `litex_term` to perform a serial boot.
+Build the interactive PWM demo the same way:
+
+```sh
+cd demo_pwm
+make clean all
+```
+
+After the build completes, `demo.bin` is created in the selected demo
+directory. This file is used by `litex_term` to perform a serial boot.
 
 ## Running
 
@@ -105,6 +122,23 @@ At root directory:
 
 ```bash
 litex_term --kernel demo_blink/demo.bin /dev/ttyACM0
+```
+
+For the interactive PWM demo:
+
+```bash
+litex_term --kernel demo_pwm/demo.bin /dev/ttyACM0
+```
+
+Available PWM demo commands are:
+
+```text
+help
+led
+pwm en 0
+pwm en 1
+pwm p <value>
+pwm d <value>
 ```
 
 The expected banner is:
