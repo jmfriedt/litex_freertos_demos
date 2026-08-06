@@ -1,0 +1,17 @@
+# LiteX
+build
+build_*
+
+# Python
+__pycache__
+
+# software
+*.bin
+*.d
+*.elf
+*.map
+*.o
+
+# vim
+*.swp
+*.swo
