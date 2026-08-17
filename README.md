@@ -81,7 +81,7 @@ timer path and fail to boot.
 ### Gateware
 
 ```bash
-./olimex_gatemate_a1_evb.py --build [--load] [--cpu-type xxxx] [--with-pwm]
+./olimex_gatemate_a1_evb.py --build [--load] [--cpu-type xxxx] [--with-pwm] [--with-spi]
 ```
 
 The `--load` option may be used at the same time or in a second step.
@@ -91,6 +91,9 @@ The `--load` option may be used at the same time or in a second step.
 
 The argument `--with-pwm` enables PWM peripheral (this option is required for
 `demo_pwm`.
+
+The argument `--with-spi` enables SPI peripheral (this option is required for
+`demo_pwm_spi`.
 
 The gateware must be in place before compiling the demo.
 
@@ -128,6 +131,11 @@ For the interactive PWM demo:
 
 ```bash
 litex_term --kernel demo_pwm/demo.bin /dev/ttyACM0
+```
+
+and then from the litex shell
+```
+serialboot
 ```
 
 Available PWM demo commands are:
@@ -199,5 +207,5 @@ CPU as the bitstream and BIOS.
 ## Contact
 
 E-mail: Gwenhael Goavec-Merou <gwenhael.goavec-merou@trabucayre.com></br>
-Copyright (C) <b>2025</b></br>
+Copyright (C) <b>2026</b></br>
 SPDX-License-Identifier: BSD-2-Clause</br>
