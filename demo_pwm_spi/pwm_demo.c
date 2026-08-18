@@ -102,13 +102,13 @@ static void prvHandlePwmCommand(char *str)
 {
 	char *subcommand = get_token(&str);
 	char *argument = get_token(&str);
-	uint32_t value;
 
 #ifndef CSR_PWM_BASE
 	(void)subcommand;
 	(void)argument;
 	litex_uart_puts(UART_HW_HANDLE, "PWM is not present in this SoC build.\n");
 #else
+	uint32_t value;
 	if (strcmp(subcommand, "en") == 0) {
 		if (!prvParseUnsigned(argument, &value) || (value > 1u)) {
 			litex_uart_puts(UART_HW_HANDLE, "Usage: pwm en 0|1\n");
@@ -144,13 +144,13 @@ static void prvHandleSPICommand(char *str)
 {
 	char *subcommand = get_token(&str);
 	char *argument = get_token(&str);
-	uint32_t value;
 
 #ifndef CSR_SPI_BASE  // See ../build/olimex_gatemate_a1_evb/software/include/generated/csr.h
 	(void)subcommand;
 	(void)argument;
 	litex_uart_puts(UART_HW_HANDLE, "SPI is not present in this SoC build.\n");
 #else
+	uint32_t value;
 	if (strcmp(subcommand, "cs") == 0) {
 		if (!prvParseUnsigned(argument, &value) || (value > 1u)) {
 			litex_uart_puts(UART_HW_HANDLE, "Usage: spi cs 0|1\n");
